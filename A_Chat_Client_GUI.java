@@ -1,24 +1,20 @@
 
-
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.*;
-import java.util.ArrayList;
 
 public class A_Chat_Client_GUI {
     
     private static A_Chat_Client ChatClient;
-    public static String UserName = "Anonymous";
-    
+    public static String UserName = "Novi korisnik zapocinje chat";
+    public static String IP = "Neki IP";
+    public static String PORT = "Neki PORT";
     public static JFrame MainWindow = new JFrame();
-    private static JButton B_ABOUT = new JButton();
     private static JButton B_CONNECT = new JButton();
     private static JButton B_DISCONNECT = new JButton();
-    private static JButton B_HELP = new JButton();
     private static JButton B_SEND = new JButton();
-    private static JLabel L_Message = new JLabel("Message: ");
+    private static JLabel L_Message = new JLabel("Poruka: ");
     public static JTextField TF_Message = new JTextField(20);
     private static JLabel L_Conversation = new JLabel();
     public static JTextArea TA_CONVERSATION = new JTextArea();
@@ -31,8 +27,12 @@ public class A_Chat_Client_GUI {
     
     public static JFrame LogInWindow = new JFrame();
     public static JTextField TF_UserNameBox = new JTextField(20);
+    public static JTextField TF_IP = new JTextField(20);
+    public static JTextField TF_PORT = new JTextField(20);
     private static JButton B_ENTER = new JButton("ENTER");
-    private static JLabel L_EnterUserName = new JLabel("Enter username: ");
+    private static JLabel L_EnterUserName = new JLabel("Unesite ime: ");
+    private static JLabel L_EnterIP = new JLabel("Unesite IP servera: ");
+    private static JLabel L_EnterPORT = new JLabel("Unesite PORT: ");
     private static JPanel P_LogIn = new JPanel();
     
     public static void main(String[] args) 
@@ -45,10 +45,10 @@ public class A_Chat_Client_GUI {
     {
         try
         {
-            final int PORT = 444;
-            final String HOST = "localhost";
-            Socket SOCK = new Socket(HOST, PORT);
-            System.out.println("You connected to: "+ HOST);
+            final int PORTn = Integer.parseInt(PORT);
+            final String HOST = IP;  // ip
+            Socket SOCK = new Socket(HOST, PORTn);
+            System.out.println("Konekcija na: "+ HOST);
             
             ChatClient = new A_Chat_Client(SOCK);
             
@@ -63,7 +63,7 @@ public class A_Chat_Client_GUI {
         catch(Exception e)
         {
             System.out.print(e);
-            JOptionPane.showMessageDialog(null, "Server not responding.");
+            JOptionPane.showMessageDialog(null, "Server ne odgovara!");
             System.exit(0);
         }
     }
@@ -77,13 +77,17 @@ public class A_Chat_Client_GUI {
     
     public static void BuildLogInWindow()
     {
-        LogInWindow.setTitle("What's your name?");
-        LogInWindow.setSize(400, 100);
+        LogInWindow.setTitle("Kako se zoves?");
+        LogInWindow.setSize(400, 200);
         LogInWindow.setLocation(250, 200);
-        LogInWindow.setResizable(false);
+        LogInWindow.setResizable(true);
         P_LogIn = new JPanel();
         P_LogIn.add(L_EnterUserName);
         P_LogIn.add(TF_UserNameBox);
+        P_LogIn.add(L_EnterIP);
+        P_LogIn.add(TF_IP);
+        P_LogIn.add(L_EnterPORT);
+        P_LogIn.add(TF_PORT);
         P_LogIn.add(B_ENTER);
         LogInWindow.add(P_LogIn);
         
@@ -93,7 +97,7 @@ public class A_Chat_Client_GUI {
     
     public static void BuildMainWindow()
     {
-        MainWindow.setTitle(UserName + "'s Chat Box");
+        MainWindow.setTitle(UserName);
         MainWindow.setSize(450, 500);
         MainWindow.setLocation(220, 180);
         MainWindow.setResizable(false);
@@ -127,19 +131,7 @@ public class A_Chat_Client_GUI {
         MainWindow.getContentPane().add(B_CONNECT);
         B_CONNECT.setBounds(130, 40, 110, 25);
         
-        B_HELP.setBackground(new java.awt.Color(0, 0, 255));
-        B_HELP.setForeground(new java.awt.Color(255, 255, 255));
-        B_HELP.setText("HELP");
-        MainWindow.getContentPane().add(B_HELP);
-        B_HELP.setBounds(420, 40, 70, 25);
-        
-        B_ABOUT.setBackground(new java.awt.Color(0, 0, 255));
-        B_ABOUT.setForeground(new java.awt.Color(255, 255, 255));
-        B_ABOUT.setText("ABOUT");
-        MainWindow.getContentPane().add(B_ABOUT);
-        B_ABOUT.setBounds(340, 40, 75, 25);
-        
-        L_Message.setText("Message:");
+        L_Message.setText("Poruka:");
         MainWindow.getContentPane().add(L_Message);
         L_Message.setBounds(10, 10, 60, 20);
         
@@ -149,7 +141,7 @@ public class A_Chat_Client_GUI {
         TF_Message.setBounds(70, 4, 260, 30);
         
         L_Conversation.setHorizontalAlignment(SwingConstants.CENTER);
-        L_Conversation.setText("Conversation");
+        L_Conversation.setText("Razgovor:");
         MainWindow.getContentPane().add(L_Conversation);
         L_Conversation.setBounds(100, 70, 140, 16);
         
@@ -167,14 +159,12 @@ public class A_Chat_Client_GUI {
         SP_CONVERSATION.setBounds(10, 90, 330, 180);
         
         L_ONLINE.setHorizontalAlignment(SwingConstants.CENTER);
-        L_ONLINE.setText("Currently Online");
+        L_ONLINE.setText("Trenutno konektovani");
         L_ONLINE.setToolTipText("");
         MainWindow.getContentPane().add(L_ONLINE);
         L_ONLINE.setBounds(350, 70, 130, 16);
         
-        //String [] TestNames = {"Bob", "Sue", "Jenny", "Anna"};
         JL_ONLINE.setForeground(new java.awt.Color(0, 0, 255));
-        //JL_ONLINE.setListData(TestNames);
         
         SP_ONLINE.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         SP_ONLINE.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -183,7 +173,7 @@ public class A_Chat_Client_GUI {
         SP_ONLINE.setBounds(350, 90, 130, 180);
         
         L_LoggedInAs.setFont(new java.awt.Font("Tahoma", 0, 12));
-        L_LoggedInAs.setText("Currently Logged In As");
+        L_LoggedInAs.setText("Trenutno logovan kao:");
         MainWindow.getContentPane().add(L_LoggedInAs);
         L_LoggedInAs.setBounds(348, 0, 140, 15);
         
@@ -200,7 +190,6 @@ public class A_Chat_Client_GUI {
         B_ENTER.addActionListener(
                 new java.awt.event.ActionListener() {
 
-            @Override
             public void actionPerformed(ActionEvent e) {
                 ACTION_B_ENTER();
             }
@@ -212,10 +201,13 @@ public class A_Chat_Client_GUI {
     {
         if(!TF_UserNameBox.getText().equals(""))
         {
-            UserName = TF_UserNameBox.getText().trim();
+        	
+            UserName = TF_UserNameBox.getText().trim(); // UserName
+            IP = TF_IP.getText().trim();// IP
+            PORT = TF_PORT.getText().trim(); // PORT
             L_LoggedInAsBox.setText(UserName);
             A_Chat_Server.CurrentUsers.add(UserName);
-            MainWindow.setTitle(UserName+"'s Chat Box");
+            MainWindow.setTitle(UserName+" chat-uje");
             LogInWindow.setVisible(false);
             B_SEND.setEnabled(true);
             B_DISCONNECT.setEnabled(true);
@@ -224,7 +216,7 @@ public class A_Chat_Client_GUI {
         }
         else
         {
-            JOptionPane.showMessageDialog(null, "Please enter a name!");
+            JOptionPane.showMessageDialog(null, "Molimo, unesite ime");
         }
     }
     
@@ -233,17 +225,16 @@ public class A_Chat_Client_GUI {
         B_SEND.addActionListener(
                 new java.awt.event.ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ACTION_B_SEND();
-            }
+					public void actionPerformed(ActionEvent arg0) {
+						ACTION_B_SEND();
+					}
+					
         }
         );
         
         B_DISCONNECT.addActionListener(
                 new java.awt.event.ActionListener() {
 
-            @Override
             public void actionPerformed(ActionEvent e) {
                 ACTION_B_DISCONNECT();
             }
@@ -253,32 +244,12 @@ public class A_Chat_Client_GUI {
         B_CONNECT.addActionListener(
                 new java.awt.event.ActionListener() {
 
-            @Override
             public void actionPerformed(ActionEvent e) {
                 BuildLogInWindow();
             }
         }
         );
         
-        B_HELP.addActionListener(
-                new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ACTION_B_HELP();
-            }
-        }
-        );
-        
-        B_ABOUT.addActionListener(
-                new java.awt.event.ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ACTION_B_HELP();
-            }
-        }
-        );
     }
     
     public static void ACTION_B_SEND()
@@ -302,8 +273,5 @@ public class A_Chat_Client_GUI {
         }
     }
     
-    public static void ACTION_B_HELP()
-    {
-        JOptionPane.showMessageDialog(null, "Multi-Client CHAT Program");
-    }
+   
 }

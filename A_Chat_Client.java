@@ -1,5 +1,4 @@
 
-
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
@@ -41,10 +40,10 @@ public class A_Chat_Client implements Runnable{
     
     public void DISCONNECT() throws IOException
     {
-        OUT.println(A_Chat_Client_GUI.UserName + " has disconnected.");
+        OUT.println(A_Chat_Client_GUI.UserName + " je diskonektovan.");
         OUT.flush();
         SOCK.close();
-        JOptionPane.showMessageDialog(null, "You disconnected");
+        JOptionPane.showMessageDialog(null, "Upravo ste se diskonektovali.");
         System.exit(0);
     }
     
